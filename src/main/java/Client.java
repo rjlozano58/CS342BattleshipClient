@@ -1,7 +1,6 @@
-// Rogelio Lozano and Pradyun Shrestha
+// Rogelio Lozano, Pradyun Shrestha, Zakareah Hafeez
 // CS 342 - Software Design - Prof. McCarthy
-// Project 3: Messaging App
-// Description: This Class is responsible for Threading of a Client on the server
+// Project 4: Battleship
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

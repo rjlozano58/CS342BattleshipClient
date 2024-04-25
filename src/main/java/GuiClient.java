@@ -1,7 +1,6 @@
-// Rogelio Lozano and Pradyun Shrestha
+// Rogelio Lozano, Pradyun Shrestha, Zakareah Hafeez
 // CS 342 - Software Design - Prof. McCarthy
-// Project 3: Messaging App
-// Description: This Class is responsible for Messaging App GUI on the client side
+// Project 4: Battleship
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -327,15 +326,18 @@ public class GuiClient extends Application{
 			Board.Cell cell = (Board.Cell) event.getSource();
 			System.out.println(" PLAYER CLICK - X: " + cell.x + " Y: " + cell.y);
 			if (battleshipGame.playerBoard.placeShip(new Ship(battleshipGame.shipsToPlace, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
-				--battleshipGame.shipsToPlace;
-				shipsToPlace.setText("Place " + battleshipGame.shipsToPlace + " cell ship");
-				if (battleshipGame.shipsToPlace == 0) {
-					battleshipGame.shipsSet = true;
-					readyButton.setDisable(false);
-					gameStatusUpdates.setText("Ready up to Start!");
-					shipsToPlace.setText("");
+				if (battleshipGame.shipsToPlace != 0){
+					--battleshipGame.shipsToPlace;
+					shipsToPlace.setText("Place " + battleshipGame.shipsToPlace + " cell ship");
+					if (battleshipGame.shipsToPlace == 0) {
+						battleshipGame.shipsSet = true;
+						readyButton.setDisable(false);
+						gameStatusUpdates.setText("Ready up to Start!");
+						shipsToPlace.setText("");
 
+					}
 				}
+
 			}
 		});
 
@@ -456,14 +458,16 @@ public class GuiClient extends Application{
 			Board.Cell cell = (Board.Cell) event.getSource();
 			System.out.println("YOU PLACED SHIP AT - X: " + cell.x + " Y: " + cell.y);
 			if (battleshipGame.playerBoard.placeShip(new Ship(battleshipGame.shipsToPlace, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
-				--battleshipGame.shipsToPlace;
-				shipsToPlace.setText("Place " + battleshipGame.shipsToPlace + " cell ship");
-				if (battleshipGame.shipsToPlace == 0) {
-					battleshipGame.shipsSet = true;
-					readyButton.setDisable(false);
-					gameStatusUpdates.setText("Ready up!");
-					shipsToPlace.setText("");
+				if (battleshipGame.shipsToPlace != 0){
+					--battleshipGame.shipsToPlace;
+					shipsToPlace.setText("Place " + battleshipGame.shipsToPlace + " cell ship");
+					if (battleshipGame.shipsToPlace == 0) {
+						battleshipGame.shipsSet = true;
+						readyButton.setDisable(false);
+						gameStatusUpdates.setText("Ready up!");
+						shipsToPlace.setText("");
 
+					}
 				}
 			}
 		});

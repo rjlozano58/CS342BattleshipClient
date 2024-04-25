@@ -1,3 +1,6 @@
+// Rogelio Lozano, Pradyun Shrestha, Zakareah Hafeez
+// CS 342 - Software Design - Prof. McCarthy
+// Project 4: Battleship
 
 import java.util.ArrayList;
 import java.util.List;

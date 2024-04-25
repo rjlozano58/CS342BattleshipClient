@@ -1,4 +1,6 @@
-import javafx.scene.Parent;
+// Rogelio Lozano, Pradyun Shrestha, Zakareah Hafeez
+// CS 342 - Software Design - Prof. McCarthy
+// Project 4: Battleship
 
 public class Ship {
     public int type; //This is the length of the ship ex. 5 - > ship is 5 cells long

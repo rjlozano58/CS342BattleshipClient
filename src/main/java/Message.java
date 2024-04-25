@@ -1,7 +1,6 @@
-// Rogelio Lozano and Pradyun Shrestha
+// Rogelio Lozano, Pradyun Shrestha, Zakareah Hafeez
 // CS 342 - Software Design - Prof. McCarthy
-// Project 3: Messaging App
-// Description: This Class is a Message object that is sent between server and client(s)
+// Project 4: Battleship
 import java.io.Serializable;
 
 // The Message class represents a message that can be sent between the server and clients.
