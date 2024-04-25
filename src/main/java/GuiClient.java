@@ -35,8 +35,6 @@ public class GuiClient extends Application{
 	Button confirmOpponent = new Button("Confirm Opponent");
 	HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
 	VBox setUserBox;
-
-	HBox buttonsBox = new HBox(10, readyButton, sendButton, newGameButton);
 	Alert invalidUserAlert = new Alert(AlertType.ERROR);
 	Alert gameoverMessage = new Alert(AlertType.INFORMATION);
 	Client clientConnection;
@@ -44,21 +42,6 @@ public class GuiClient extends Application{
 	ObservableList<String> observableList = FXCollections.observableArrayList("Computer");
 	ComboBox<String> selectReceiver = new ComboBox<>(observableList);
 	Battleship battleshipGame = new Battleship(opponentUsername);
-
-
-	////////////////////////////////////FROM BATTLESHIP.JAVA////////////////////////////////////
-//	boolean running = false;
-//	Board enemyBoard, playerBoard;
-//
-//	int shipsToPlace = 5;
-//
-//	boolean enemyTurn = false;
-//
-//	Random random = new Random();
-//
-//	Alert gameoverMessage = new Alert(Alert.AlertType.INFORMATION);
-	////////////////////////////////////FROM BATTLESHIP.JAVA////////////////////////////////////
-
 
 	public static void main(String[] args) {
 		launch(args);
@@ -118,7 +101,7 @@ public class GuiClient extends Application{
 									// Server sends us "Start" letting us know that our opponent is ready
 								} else if (gameMessage.getContent().equals("Start")) {
 									battleshipGame.startGame();
-									gameStatusUpdates.setText("");
+									gameStatusUpdates.setText("Both players are ready! Go!");
 									sendButton.setDisable(false);
 									readyButton.setDisable(true);
 								}else if (gameMessage.getContent().equals("Win")){
@@ -141,11 +124,7 @@ public class GuiClient extends Application{
 
 		MessagesStream = new ListView<String>();
 
-		// Turns ListView Cells Blue if they start with client's username
-//
-//
-//
-//		//////////////////////////////////////////////////// Event Listeners ////////////////////////////////////////////////////
+		//////////////////////////////////////////////////// Event Listeners ////////////////////////////////////////////////////
 		setUsername.setOnAction(e->{
 
 			if (usernameAvailable(clientUsernameInput.getText(),clientConnection.serverClients)){
@@ -165,8 +144,6 @@ public class GuiClient extends Application{
 		confirmOpponent.setOnAction(e -> {
 			opponentUsername = selectReceiver.getSelectionModel().getSelectedItem();
 			battleshipGame = new Battleship(opponentUsername);
-
-
 
 			if (opponentUsername.equals("Computer")){
 				sceneMap.put("battleshipComputer",createBattleshipComputer());
@@ -255,7 +232,7 @@ public class GuiClient extends Application{
 	}
 
 	public Scene createOpponentSelection(){
-//#303030
+
 		BorderPane borderPane = new BorderPane();
 		borderPane.setStyle("-fx-background-color:#303030;");
 
@@ -271,7 +248,6 @@ public class GuiClient extends Application{
 		confirmOpponent.setStyle("-fx-background-color:black; -fx-text-fill:white; -fx-border-color:#616161; -fx-border-width:2px; ");
 		borderPane.setCenter(nameSelectPlayer);
 
-//		Scene root = new Scene(borderPane,800,800);
 
         return new Scene(borderPane,800,800);
 	}
@@ -294,7 +270,7 @@ public class GuiClient extends Application{
 
 		Label shipsToPlace = new Label("Place " + battleshipGame.shipsToPlace + " cell ship");
 		shipsToPlace.setTextAlignment(TextAlignment.CENTER);
-		shipsToPlace.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:white;");
+		shipsToPlace.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:#9cd9ff;");
 
 		leaveServer.setStyle("-fx-background-color:#000; -fx-text-fill:white; -fx-border-color:#616161; -fx-border-width:2px;");
 
@@ -304,7 +280,7 @@ public class GuiClient extends Application{
 		HBox usernameDisplayBox = new HBox(usernameDisplay,opponentDisplay);
 		usernameDisplayBox.setAlignment(Pos.TOP_CENTER);
 
-		gameStatusUpdates.setStyle("-fx-font-family:arial; -fx-font-size:20; -fx-text-fill:white;");
+		gameStatusUpdates.setStyle("-fx-font-family:arial; -fx-font-size:20; -fx-text-fill:#9cd9ff;");
 
 		VBox titleAndCombo = new VBox(50, usernameDisplayBox,topContainer);
 		titleAndCombo.setAlignment(Pos.TOP_CENTER);
@@ -365,10 +341,11 @@ public class GuiClient extends Application{
 		HBox boardsBox = new HBox(50,playerVbox,enemyVbox);
 		boardsBox.setAlignment(Pos.CENTER);
 
-//        sendButton.setStyle("-fx-background-color: black;-fx-text-fill: white; -fx-font-size: 16px;-fx-border-color: #616161; -fx-border-width: 2px; -fx-border-radius: 2px;-fx-pref-height: 50px;");
-//
 		sendButton.setOnAction(e -> {
-			System.out.println("Pressing player vs. computer send button");
+
+			if (gameStatusUpdates.getText().equals("Both players are ready! Go!")){
+				gameStatusUpdates.setText("");
+			}
 
 			Board.Cell cell = battleshipGame.returnTarget(battleshipGame.enemyBoard);
 
@@ -388,6 +365,7 @@ public class GuiClient extends Application{
 
 		readyButton.setOnAction(e -> {
 			battleshipGame.startGame();
+			gameStatusUpdates.setText("Both players are ready! Go!");
 			sendButton.setDisable(false);
 			readyButton.setDisable(true);
 			gameStatusUpdates.setText("");
@@ -432,9 +410,9 @@ public class GuiClient extends Application{
 
 		Label shipsToPlace = new Label("Place " + battleshipGame.shipsToPlace + " cell ship");
 		shipsToPlace.setTextAlignment(TextAlignment.CENTER);
-		shipsToPlace.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:white;");
+		shipsToPlace.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:#9cd9ff;");
 
-		gameStatusUpdates.setStyle("-fx-font-family:arial; -fx-font-size:20; -fx-text-fill:white;");
+		gameStatusUpdates.setStyle("-fx-font-family:arial; -fx-font-size:20; -fx-text-fill:#9cd9ff;");
 
 		VBox titleAndCombo = new VBox(50, usernameDisplayBox,topContainer);
 		titleAndCombo.setAlignment(Pos.TOP_CENTER);
@@ -472,10 +450,13 @@ public class GuiClient extends Application{
 			Board.Cell cell = (Board.Cell) event.getSource();
 			System.out.println("YOU PLACED SHIP AT - X: " + cell.x + " Y: " + cell.y);
 			if (battleshipGame.playerBoard.placeShip(new Ship(battleshipGame.shipsToPlace, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
-				if (--battleshipGame.shipsToPlace == 0) {
+				--battleshipGame.shipsToPlace;
+				shipsToPlace.setText("Place " + battleshipGame.shipsToPlace + " cell ship");
+				if (battleshipGame.shipsToPlace == 0) {
 					battleshipGame.shipsSet = true;
 					readyButton.setDisable(false);
 					gameStatusUpdates.setText("Ready up!");
+					shipsToPlace.setText("");
 
 				}
 			}
@@ -491,6 +472,10 @@ public class GuiClient extends Application{
 		boardsBox.setAlignment(Pos.CENTER);
 
 		sendButton.setOnAction(e -> {
+
+			if (gameStatusUpdates.getText().equals("Both players are ready! Go!")){
+				gameStatusUpdates.setText("");
+			}
 
 			Board.Cell cell = battleshipGame.returnTarget(battleshipGame.enemyBoard);
 
@@ -512,10 +497,10 @@ public class GuiClient extends Application{
 		readyButton.setOnAction(e -> {
 			// send  message to server saying ready -> server looks through currentGames<>
 			clientConnection.send(new Pair<String,String>(username,opponentUsername));
-			gameStatusUpdates.setText("Waiting for Player 2 to Ready Up...");
+			gameStatusUpdates.setText("Waiting for " + opponentUsername + " to Ready Up...");
 		});
 
-		VBox centralVBox = new VBox(50,gameStatusUpdates,boardsBox,buttonsBox);
+		VBox centralVBox = new VBox(50,gameStatusUpdates,boardsBox,shipsToPlace,buttonsBox);
 
 		centralVBox.setAlignment(Pos.CENTER);
 

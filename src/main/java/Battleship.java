@@ -142,10 +142,6 @@ public class Battleship {
             }
         }
 
-        gameoverMessage.setTitle("GAME MESSAGE");
-        gameoverMessage.setContentText("BOTH PLAYERS READY, GAME HAS STARTED");
-        gameoverMessage.showAndWait();
-
         running = true;
     }
 
