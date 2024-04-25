@@ -125,6 +125,8 @@ public class GuiClient extends Application{
 		MessagesStream = new ListView<String>();
 
 		//////////////////////////////////////////////////// Event Listeners ////////////////////////////////////////////////////
+
+		// For first scene, set you username, sends message to server with your username
 		setUsername.setOnAction(e->{
 
 			if (usernameAvailable(clientUsernameInput.getText(),clientConnection.serverClients)){
@@ -141,6 +143,7 @@ public class GuiClient extends Application{
 
 		});
 
+		// Confirm opponent button, sets your opponent based on combo box selection
 		confirmOpponent.setOnAction(e -> {
 			opponentUsername = selectReceiver.getSelectionModel().getSelectedItem();
 			battleshipGame = new Battleship(opponentUsername);
@@ -155,6 +158,7 @@ public class GuiClient extends Application{
 
 		});
 
+		// Starts a new game, restarting battleship variable and returning to choosing an opponent
 		newGameButton.setOnAction(e -> {
 			battleshipGame.resetGame();
 			primaryStage.setScene(sceneMap.get("opponents"));
@@ -190,6 +194,7 @@ public class GuiClient extends Application{
 
 	// Checks if a User picked a valid username. Traverses through current clients on server to prevent duplicates.
 	public Boolean usernameAvailable(String username, ArrayList<String> serverList){
+
 		ArrayList<String> allUsers = new ArrayList<>(serverList);
 		if (username.isEmpty()){
 			return false;
@@ -202,6 +207,7 @@ public class GuiClient extends Application{
 			}
 		}
 		return true;
+
 	}
 
 	// Creates Enter Scene for setting the username

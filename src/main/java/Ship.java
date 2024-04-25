@@ -13,10 +13,12 @@ public class Ship {
 
     }
 
+    // if a ship is hit the health decreases by 1 point
     public void hit() {
         health--;
     }
 
+    // returns true if alive, false if ship is sunk
     public boolean isAlive() {
         return health > 0;
     }

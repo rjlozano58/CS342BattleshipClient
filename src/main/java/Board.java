@@ -21,6 +21,7 @@ public class Board extends Parent {
     private Cell[][] cells = new Cell[10][10];
     public Cell currentTarget = null;
 
+    // Contructor for a board, passing a mouse click event to each cell
     public Board(boolean enemy, EventHandler<? super MouseEvent> handler) {
         this.enemy = enemy;
         for (int y = 0; y < cells.length; y++) {
@@ -36,6 +37,7 @@ public class Board extends Parent {
     }
 
 
+    // returns cell from board, based on coordinates
     public Cell getCell(int x, int y) {
         if (x >= 0 && x < 10 && y >= 0 && y < 10) {
             return cells[y][x];
@@ -43,6 +45,7 @@ public class Board extends Parent {
         return null;
     }
 
+    // setTarget is called when player clicks on a cell, turning it light grey
     public void setTarget(int x, int y) {
         if (enemy) { // Ensure we only target cells on enemy boards
             Cell cell = getCell(x, y);
@@ -54,41 +57,12 @@ public class Board extends Parent {
         }
     }
 
-    private Cell createCell(int x, int y, EventHandler<? super MouseEvent> handler) {
-        Cell cell = new Cell(x, y, this);
-        cell.setOnMouseClicked(handler);
-        return cell;
-    }
-
-    public void forEachCell(Consumer<Cell> action) {
-        for (Node row : rows.getChildren()) {
-            for (Node cellNode : ((HBox) row).getChildren()) {
-                Board.Cell cell = (Board.Cell) cellNode;
-                action.accept(cell);
-            }
-        }
-    }
-
-//    public void confirmAttacks() {
-//        for (Node row : rows.getChildren()) {
-//            for (Node cellNode : ((HBox) row).getChildren()) {
-//                Cell cell = (Cell) cellNode;
-//                if (cell.isTargeted) {
-//                    boolean hit = cell.confirmAttack(); // Confirm the attack
-//                    if (hit) {
-//                        // handle hit logic, e.g., check if game is over
-//                    }
-//                    cell.isTargeted = false; // Reset the targeted flag
-//                }
-//            }
-//        }
-//        // Add any additional logic needed after confirming attacks
-//    }
-
+   // Returns true if all ships are sunk
     public boolean allShipsSunk() {
         return ships == 0;  // Assuming 'ships' is decremented whenever a ship is fully sunk
     }
 
+    // Places a ship on the board of the player when setting up their ships in the pre-game
     public boolean placeShip(Ship ship, int x, int y) {
         if (canPlaceShip(ship, x, y)) {
             int length = ship.type;
@@ -120,25 +94,9 @@ public class Board extends Parent {
         return false;
     }
 
-    private Cell[] getNeighbors(int x, int y) {
-        Point2D[] points = new Point2D[]{
-                new Point2D(x - 1, y),
-                new Point2D(x + 1, y),
-                new Point2D(x, y - 1),
-                new Point2D(x, y + 1)
-        };
 
-        List<Cell> neighbors = new ArrayList<Cell>();
-
-        for (Point2D p : points) {
-            if (isValidPoint(p)) {
-                neighbors.add(getCell((int) p.getX(), (int) p.getY()));
-            }
-        }
-
-        return neighbors.toArray(new Cell[0]);
-    }
-
+    // Method return true if location is valid to place a ship of a certain size in the specific x, y coordinates
+    // Takes into consideration if the point is in bounds and if it would overlap another ship.
     private boolean canPlaceShip(Ship ship, int x, int y) {
         int length = ship.type;
 
@@ -165,23 +123,21 @@ public class Board extends Parent {
         return true;  // Return true if all checks are passed
     }
 
-    private boolean isValidPoint(Point2D point) {
-        return isValidPoint(point.getX(), point.getY());
-    }
-
+    // Returns true if cell is on the map
     private boolean isValidPoint(double x, double y) {
         return x >= 0 && x < 10 && y >= 0 && y < 10;
     }
 
+    // Method will set a cell to Blue (a miss)
     public void setCellBlue(int x, int y) {
         Cell cell = getCell(x, y);
         if (cell != null && !cell.wasShot) {
-            cell.setFill(Color.BLUE);
+            cell.setFill(Color.rgb(0, 7, 61));
             cell.wasShot = true;  // Assuming marking the cell as shot
         }
     }
 
-    // Method to set a cell's color to red (indicating a hit typically)
+    // Method to set a cell's color to red ( a hit)
     public void setCellRed(int x, int y) {
         Cell cell = getCell(x, y);
         if (cell != null && !cell.wasShot) {
@@ -212,6 +168,7 @@ public class Board extends Parent {
             setStroke(Color.BLACK);
         }
 
+        // Method turns target dark grey when clicked on, and sets the cell to it's boards "currentTarget"
         public Cell target() {
             if (!wasShot && board.currentTarget != this) {  // Ensure it's not the same cell
                     if (board.currentTarget != null) {
@@ -225,10 +182,11 @@ public class Board extends Parent {
             return null;
         }
 
+        // Method is responsible for taking a shot at a cell
         public boolean shoot() {
             if (!wasShot) {
                 wasShot = true;
-                setFill(Color.BLACK);
+                setFill(Color.rgb(0, 7, 61));
 
                 if (ship != null) {
                     ship.hit();
@@ -242,31 +200,16 @@ public class Board extends Parent {
             return false;
         }
 
+        // Resets the color of a cell to light gray
+        // Important for targeting cells
         public void resetColor() {
             if (!wasShot) {
                 setFill(Color.LIGHTGRAY);
-//                isTargeted = false;
+                isTargeted = false;
             }
         }
 
-        public boolean confirmAttack() {
-            if (isTargeted && !wasShot) {
-                wasShot = true;
-                setFill(Color.BLACK); // Confirm the attack, turn the cell black
-
-                if (ship != null) {
-                    ship.hit();
-                    setFill(Color.RED); // If it hits a ship, mark it red
-                    if (!ship.isAlive()) {
-                        board.ships--;
-                    }
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
+        // toString() for debugging purposes
         public String toString(){
              return "X : " + x + " Y : " + y;
         }

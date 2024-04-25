@@ -27,12 +27,12 @@ public class Battleship {
     public int shipsToPlace = 5;
     public boolean shipsSet = false;
     public boolean enemyTurn = false;
-    private Stack<Point> targetStack = new Stack<>();
     private ArrayList<Pair<Integer,Integer>> potentialCells = new ArrayList<>();
     private Random random = new Random();
     public Alert gameoverMessage = new Alert(Alert.AlertType.INFORMATION);
     public boolean isComputer = false;
 
+    // We construct a Battleship object with the opponents name
     public Battleship( String opponent) {
 
         this.opponentUser = opponent;
@@ -44,7 +44,7 @@ public class Battleship {
 
     }
 
-
+    // Returns the current selected cell on the board
     public Board.Cell returnTarget(Board board){
         if (board.currentTarget == null) {
             System.out.println("No target is currently selected.");
@@ -53,6 +53,7 @@ public class Battleship {
         return board.currentTarget;
     }
 
+    // Main method for the computer/AI to make a move
     public void enemyMove() {
         if (potentialCells.isEmpty()) {
             randomGuess();
@@ -65,9 +66,10 @@ public class Battleship {
         }
     }
 
+    // Makes a random guess on the board for the computer
     private void randomGuess() {
         System.out.println("Starting random guess...");
-        while (enemyTurn) {
+        while (enemyTurn) { // while it is the enemy's turn (they get another turn if "Hit"), make random guesses
             int x = random.nextInt(10);
             int y = random.nextInt(10);
             Board.Cell cell = playerBoard.getCell(x, y);
@@ -80,12 +82,14 @@ public class Battleship {
             if (enemyTurn) {
                 System.out.println("Hit at X: " + x + " Y: " + y);
                 generatePotentialSpot(cell.x,cell.y);  // Store the hit for targeting mode
+                targetSurroundingCells();
             } else {
                 System.out.println("Miss at X: " + x + " Y: " + y);
             }
         }
     }
 
+    // Generates potential hit points, storing the points in array potentialCells
     private void generatePotentialSpot(Integer x, Integer y){
         // generate 4 spots, below,top,left,right
         ArrayList<Pair<Integer,Integer>> newPoints = new ArrayList<>();
@@ -101,25 +105,27 @@ public class Battleship {
         //test if those are valid spots on the board
         newPoints.removeIf(pair -> (pair.getKey() < 0 || pair.getKey() > 9 || pair.getValue() < 0 || pair.getValue() > 9));
 
+        // Adds potential points to arraylist of spots to visit
         newPoints.forEach(pair ->{
             System.out.println("Potential point -> X: " + pair.getKey() + " Y: " + pair.getKey());
             potentialCells.add(pair);
         });
     }
 
+    // Uses the list of potential hits and shoots at one or many of those
     private void targetSurroundingCells() {
-        System.out.println("Starting targeted attack...");
+
         while (enemyTurn && !potentialCells.isEmpty()) {
             Pair<Integer, Integer> cellCoords = potentialCells.remove(0);  // Get and remove the first element in the list
             int x = cellCoords.getKey();
             int y = cellCoords.getValue();
             Board.Cell cell = playerBoard.getCell(x, y);
             if (!cell.wasShot) {
-                System.out.println("Attempting targeted shot at X: " + x + " Y: " + y);
                 enemyTurn = cell.shoot();
                 if (enemyTurn) {
                     System.out.println("Hit at X: " + x + " Y: " + y);
                     generatePotentialSpot(x, y);  // Generate new potential spots based on this hit
+                    targetSurroundingCells();
                     break;  // Stop further shots if a hit occurs
                 } else {
                     System.out.println("Miss at X: " + x + " Y: " + y);
@@ -128,7 +134,7 @@ public class Battleship {
         }
     }
 
-    // For playing again computer
+    // For playing against computer
     public void startGame() {
         // place enemy ships
         int type = 5;
@@ -143,6 +149,7 @@ public class Battleship {
         }
 
         running = true;
+
     }
 
     // This should be helpful for the sendButton,
@@ -164,6 +171,7 @@ public class Battleship {
         return "Miss"; // Assume miss if no cell was found or other error occurred
     }
 
+    // Restarts the values of Battleship object to default, so that we can start another game
     public void resetGame() {
         // Reset game flags and counters
         running = false;

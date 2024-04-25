@@ -20,7 +20,7 @@ public class GameMessage extends Message implements Serializable {
         return y;
     }
 
-    // Optional: toString method for debugging
+    // toString method for debugging
     @Override
     public String toString() {
         return "GameMessage{" +

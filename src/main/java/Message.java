@@ -10,7 +10,7 @@ public class Message implements Serializable {
     // A unique identifier for serialization. This is required for the Serializable interface.
     static final long serialVersionUID = 42L;
     private String sender;
-    private String recipient; // Use "ALL" for broadcasting
+    private String recipient;
     private String content;
 
     public Message( String sender, String recipient ,String content) {
