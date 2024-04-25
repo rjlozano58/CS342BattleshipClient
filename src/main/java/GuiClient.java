@@ -27,6 +27,7 @@ public class GuiClient extends Application{
 	String opponentUsername = "";
 	TextField clientUsernameInput = new TextField();
 	Label gameStatusUpdates = new Label();
+	Label shipsToPlace = new Label();
 	Button sendButton = new Button("Send");
 	Button readyButton = new Button("Ready");
 	Button newGameButton = new Button("New Game");
@@ -59,9 +60,7 @@ public class GuiClient extends Application{
 
 								// Opponent sends us an "Attack"
 								if (gameMessage.getContent().equals("Attack")) {
-									System.out.println("Received " + gameMessage.getContent() + " from " + gameMessage.getSender());
 									String result = battleshipGame.playMove(gameMessage, battleshipGame.playerBoard);  // Assuming attacks are always on the player board
-
 									if (result.equals("Hit")){ // Opponent sent us a Missile and it "Hit"
 										sendButton.setDisable(true);
 										battleshipGame.playerBoard.setCellRed(gameMessage.getX(), gameMessage.getY());
@@ -106,6 +105,7 @@ public class GuiClient extends Application{
 									readyButton.setDisable(true);
 								}else if (gameMessage.getContent().equals("Win")){
 									displayWin();
+
 								}
 
 							}else { // responsible for updating list of clients on server
@@ -224,14 +224,14 @@ public class GuiClient extends Application{
 		clientUsernameInput.setPrefHeight(100);
 		clientUsernameInput.setPromptText("Enter Username");
 		clientUsernameInput.setStyle("-fx-background-color: #616161; -fx-font-family:arial; -fx-text-fill: white; -fx-font-size: 25px; -fx-pref-height: 50px; -fx-border-color:#33c9ff; -fx-border-width:2px; -fx-margin: 50;");
-		setUsername.setStyle("-fx-background-color: white;-fx-text-fill: black; -fx-font-size: 16px;-fx-border-color: #616161; -fx-border-width: 2px; -fx-border-radius: 2px;-fx-pref-height: 50px;");
+		setUsername.setStyle(" -fx-font-family:arial; -fx-background-color: black; -fx-text-fill: white; -fx-font-size: 16px;-fx-border-color: #616161; -fx-border-width: 2px; -fx-border-radius: 2px;-fx-pref-height: 50px;");
 
 		// Create Border Pane
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(setUserBox);
 		BorderPane.setAlignment(setUserBox, Pos.CENTER);
 
-		Scene initialScene = new Scene(borderPane, 800, 800);
+		Scene initialScene = new Scene(borderPane, 750, 800);
 
 		return initialScene;
 
@@ -255,7 +255,7 @@ public class GuiClient extends Application{
 		borderPane.setCenter(nameSelectPlayer);
 
 
-        return new Scene(borderPane,800,800);
+        return new Scene(borderPane,750,800);
 	}
 
 	public Scene createBattleshipComputer(){
@@ -274,7 +274,7 @@ public class GuiClient extends Application{
 		enemyText.setTextAlignment(TextAlignment.CENTER);
 		enemyText.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:white;");
 
-		Label shipsToPlace = new Label("Place " + battleshipGame.shipsToPlace + " cell ship");
+		shipsToPlace.setText("Place " + battleshipGame.shipsToPlace + " cell ship");
 		shipsToPlace.setTextAlignment(TextAlignment.CENTER);
 		shipsToPlace.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:#9cd9ff;");
 
@@ -386,7 +386,7 @@ public class GuiClient extends Application{
 		root.setCenter(centralVBox);
 		root.setStyle("-fx-background-color: #303030; -fx-padding: 20;");
 
-		return new Scene(root, 1000, 800);
+		return new Scene(root, 750, 800);
 	}
 
 	public Scene createBattleshipPlayer(){
@@ -414,7 +414,7 @@ public class GuiClient extends Application{
 		enemyText.setTextAlignment(TextAlignment.CENTER);
 		enemyText.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:white;");
 
-		Label shipsToPlace = new Label("Place " + battleshipGame.shipsToPlace + " cell ship");
+		shipsToPlace.setText("Place " + battleshipGame.shipsToPlace + " cell ship");
 		shipsToPlace.setTextAlignment(TextAlignment.CENTER);
 		shipsToPlace.setStyle("-fx-font-family:arial; -fx-font-size:25; -fx-text-fill:#9cd9ff;");
 
@@ -493,7 +493,6 @@ public class GuiClient extends Application{
 
 			if (battleshipGame.enemyBoard.ships == 0) {
                 displayWin();
-
             }else if (battleshipGame.playerBoard.ships == 0){
 				displayLose();
 			}
@@ -515,14 +514,13 @@ public class GuiClient extends Application{
 		root.setCenter(centralVBox);
 		root.setStyle("-fx-background-color: #303030; -fx-padding: 20;");
 
-		return new Scene(root, 1000, 800);
+		return new Scene(root, 750, 800);
 	}
 
 	public void displayLose(){
 		System.out.println("YOU LOST");
-		gameoverMessage.setTitle("YOU LOST");
-		gameoverMessage.setContentText("YOU LOSEEEEE");
-		gameoverMessage.showAndWait();
+		gameStatusUpdates.setText("You Lost:(");
+		shipsToPlace.setText("Better luck next time! Try again!");
 		sendButton.setDisable(true);
 		readyButton.setDisable(true);
 		newGameButton.setDisable(false);
@@ -530,9 +528,8 @@ public class GuiClient extends Application{
 
 	public void displayWin(){
 		System.out.println("YOU WIN");
-		gameoverMessage.setTitle("YOU WIN");
-		gameoverMessage.setContentText("YOU WINNNNN");
-		gameoverMessage.showAndWait();
+		gameStatusUpdates.setText("You Won!");
+		shipsToPlace.setText("Start a new game!");
 		sendButton.setDisable(true);
 		readyButton.setDisable(true);
 		newGameButton.setDisable(false);
